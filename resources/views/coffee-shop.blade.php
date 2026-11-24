@@ -181,11 +181,13 @@
             </div>
 
             <div class="mt-6 flex justify-end">
-                <button type="button" disabled
-                        class="bg-emerald-600 text-white
-                               px-6 py-3 rounded-lg opacity-60">
-                    Checkout (coming soon)
-                </button>
+                
+                <a href="{{ route('checkout.create') }}"
+                    class="inline-block bg-emerald-600 hover:bg-emerald-700
+                        text-white px-6 py-3 rounded-lg font-semibold">
+                    Proceed to Checkout
+                </a>
+
             </div>
 
         </div>
