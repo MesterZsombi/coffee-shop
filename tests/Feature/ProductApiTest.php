@@ -23,7 +23,11 @@ test('unauthenticated users cannot create products', function () {
 });
 
 test('authenticated users can create products', function () {
-    Sanctum::actingAs(User::factory()->create());
+        $admin = User::factory()->create();
+        $admin->is_admin = true;
+        $admin->save();
+
+        Sanctum::actingAs($admin);
 
     $category = Category::create([
         'name' => 'Coffee',
@@ -54,7 +58,11 @@ test('missing products return 404', function () {
 });
 
 test('product creation requires valid data', function () {
-    Sanctum::actingAs(User::factory()->create());
+    $admin = User::factory()->create();
+    $admin->is_admin = true;
+    $admin->save();
+
+    Sanctum::actingAs($admin);
 
     $response = $this->postJson('/api/products', [
         'name' => '',

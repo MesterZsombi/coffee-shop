@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Throwable;
+use App\Mail\OrderConfirmation;
+use Illuminate\Support\Facades\Mail;
 
 class CheckoutController extends Controller
 {
@@ -128,6 +130,16 @@ class CheckoutController extends Controller
             'total_amount' => $order->total_amount,
             'currency' => $order->currency,
         ]);
+        try {
+                Mail::to($order->email)
+                    ->queue(new OrderConfirmation($order));
+            } catch (Throwable $e) {
+                Log::error('Order confirmation could not be queued', [
+                    'order_id' => $order->id,
+                    'exception_type' => get_class($e),
+                ]);
+            }
+        
 
         return redirect()->route('checkout.success', $order)
             ->with('success', 'Your order has been placed!');
