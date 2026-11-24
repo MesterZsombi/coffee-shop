@@ -7,9 +7,10 @@ use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class CheckoutController extends Controller
 {
@@ -55,51 +56,70 @@ class CheckoutController extends Controller
                 ->with('error', 'Your cart is empty.');
         }
 
-        $order = DB::transaction(function () use ($cart, $validated) {
-            $products = Product::whereIn('id', array_keys($cart))->get();
+        try {
+            $order = DB::transaction(function () use ($cart, $validated) {
+                $products = Product::whereIn('id', array_keys($cart))->get();
 
-            if ($products->count() !== count($cart)) {
-                throw ValidationException::withMessages([
-                    'cart' => 'Some products are no longer available.',
-                ]);
-            }
-
-            $total = 0;
-            $items = [];
-
-            foreach ($products as $product) {
-                $quantity = (int) $cart[$product->id]['quantity'];
-
-                if ($quantity < 1 || $quantity > 99) {
+                if ($products->count() !== count($cart)) {
                     throw ValidationException::withMessages([
-                        'cart' => 'Invalid product quantity.',
+                        'cart' => 'Some products are no longer available.',
                     ]);
                 }
 
-                $subtotal = $product->price * $quantity;
-                $total += $subtotal;
+                $total = 0;
+                $items = [];
 
-                $items[] = [
-                    'product_id' => $product->id,
-                    'product_name' => $product->name,
-                    'quantity' => $quantity,
-                    'unit_price' => $product->price,
-                    'subtotal' => $subtotal,
-                ];
-            }
+                foreach ($products as $product) {
+                    $quantity = (int) $cart[$product->id]['quantity'];
 
-            $order = Order::create([
-                ...$validated,
-                'total_amount' => $total,
-                'currency' => 'VND',
-                'status' => 'pending',
+                    if ($quantity < 1 || $quantity > 99) {
+                        throw ValidationException::withMessages([
+                            'cart' => 'Invalid product quantity.',
+                        ]);
+                    }
+
+                    $subtotal = $product->price * $quantity;
+                    $total += $subtotal;
+
+                    $items[] = [
+                        'product_id' => $product->id,
+                        'product_name' => $product->name,
+                        'quantity' => $quantity,
+                        'unit_price' => $product->price,
+                        'subtotal' => $subtotal,
+                    ];
+                }
+
+                $order = Order::create([
+                    ...$validated,
+                    'total_amount' => $total,
+                    'currency' => 'VND',
+                    'status' => 'pending',
+                ]);
+
+                $order->items()->createMany($items);
+
+                return $order;
+            });
+
+        } catch (ValidationException $e) {
+            // Expected validation errors should be shown to the user.
+            throw $e;
+
+        } catch (Throwable $e) {
+            // Do not log customer details or potentially sensitive exception messages.
+            Log::error('Coffee Shop checkout failed', [
+                'exception_type' => get_class($e),
             ]);
 
-            $order->items()->createMany($items);
+            return back()
+                ->withErrors([
+                    'checkout' => 'Something went wrong. Please try again.',
+                ])
+                ->withInput();
+        }
 
-            return $order;
-        });
-
+        // Clear the cart only after the order is successfully saved.
         $request->session()->forget('cart');
         $request->session()->put('last_order_id', $order->id);
 
