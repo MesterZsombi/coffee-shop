@@ -1,0 +1,48 @@
+[90m= [39m[34;4mIlluminate\Database\Eloquent\Collection[39;24m {#8709
+    [34mall[39m: [
+      [34;4mApp\Models\Category[39;24m {#8270
+        [34mid[39m: [35m1[39m,
+        [34mname[39m: [32m"[39m[32mCafe[39m[32m"[39m,
+        [34mdescription[39m: [32m"[39m[32mCoffee and hot drinks[39m[32m"[39m,
+        [34mcreated_at[39m: [32m"[39m[32m2026-11-24 04:24:04[39m[32m"[39m,
+        [34mupdated_at[39m: [32m"[39m[32m2026-11-24 04:24:04[39m[32m"[39m,
+        [34mproducts[39m: [34;4mIlluminate\Database\Eloquent\Collection[39;24m {#8715
+          [34mall[39m: [
+            [34;4mApp\Models\Product[39;24m {#8713
+              [34mid[39m: [35m1[39m,
+              [34mname[39m: [32m"[39m[32mCappuccino[39m[32m"[39m,
+              [34mdescription[39m: [32m"[39m[32mEspresso with steamed milk[39m[32m"[39m,
+              [34mprice[39m: [35m35000.0[39m,
+              [34mcurrency[39m: [32m"[39m[32mVNĐ[39m[32m"[39m,
+              [34mdisplay_image_url[39m: [32m"[39m[32mhttps://images.unsplash.com/photo-1509042239860-f550ce710b93[39m[32m"[39m,
+              [34mcategory_id[39m: [35m1[39m,
+              [34mcreated_at[39m: [32m"[39m[32m2026-11-24 04:24:04[39m[32m"[39m,
+              [34mupdated_at[39m: [32m"[39m[32m2026-11-24 04:24:04[39m[32m"[39m,
+            },
+          ],
+        },
+      },
+      [34;4mApp\Models\Category[39;24m {#8271
+        [34mid[39m: [35m2[39m,
+        [34mname[39m: [32m"[39m[32mChicken[39m[32m"[39m,
+        [34mdescription[39m: [32m"[39m[32mChicken dishes[39m[32m"[39m,
+        [34mcreated_at[39m: [32m"[39m[32m2026-11-24 04:24:04[39m[32m"[39m,
+        [34mupdated_at[39m: [32m"[39m[32m2026-11-24 04:24:04[39m[32m"[39m,
+        [34mproducts[39m: [34;4mIlluminate\Database\Eloquent\Collection[39;24m {#8718
+          [34mall[39m: [
+            [34;4mApp\Models\Product[39;24m {#8712
+              [34mid[39m: [35m2[39m,
+              [34mname[39m: [32m"[39m[32mChicken Satay Salad[39m[32m"[39m,
+              [34mdescription[39m: [32m"[39m[32mChicken with peanut satay sauce[39m[32m"[39m,
+              [34mprice[39m: [35m50000.0[39m,
+              [34mcurrency[39m: [32m"[39m[32mVNĐ[39m[32m"[39m,
+              [34mdisplay_image_url[39m: [32m"[39m[32mhttps://images.unsplash.com/photo-1509042239860-f550ce710b93[39m[32m"[39m,
+              [34mcategory_id[39m: [35m2[39m,
+              [34mcreated_at[39m: [32m"[39m[32m2026-11-24 04:24:04[39m[32m"[39m,
+              [34mupdated_at[39m: [32m"[39m[32m2026-11-24 04:24:04[39m[32m"[39m,
+            },
+          ],
+        },
+      },
+    ],
+  }
