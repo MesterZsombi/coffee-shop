@@ -29,7 +29,11 @@ beforeEach(function () {
 });
 
 it('allows authenticated users to upload a product image', function () {
-    Sanctum::actingAs(User::factory()->create());
+    $admin = User::factory()->create();
+    $admin->is_admin = true;
+    $admin->save();
+
+    Sanctum::actingAs($admin);
 
     $response = $this->postJson(
         "/api/products/{$this->product->id}/image",
@@ -60,7 +64,11 @@ it('rejects unauthenticated uploads', function () {
 });
 
 it('rejects files that are not images', function () {
-    Sanctum::actingAs(User::factory()->create());
+    $admin = User::factory()->create();
+    $admin->is_admin = true;
+    $admin->save();
+
+    Sanctum::actingAs($admin);
 
     $this->postJson(
         "/api/products/{$this->product->id}/image",
@@ -72,7 +80,11 @@ it('rejects files that are not images', function () {
 });
 
 it('rejects images larger than 2 MB', function () {
-    Sanctum::actingAs(User::factory()->create());
+    $admin = User::factory()->create();
+    $admin->is_admin = true;
+    $admin->save();
+
+    Sanctum::actingAs($admin);
 
     $this->postJson(
         "/api/products/{$this->product->id}/image",
