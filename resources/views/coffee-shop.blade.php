@@ -77,15 +77,21 @@
                                         {{ $product->formatted_price }}
                                     </span>
 
-                                    <button
-                                        type="button"
-                                        disabled
-                                        class="bg-emerald-600
-                                               text-white px-4 py-2
-                                               rounded-lg opacity-60
-                                               cursor-not-allowed">
-                                        Add to cart
-                                    </button>
+                                    
+                                    <form action="{{ route('cart.add', $product) }}" method="POST">
+                                        @csrf
+
+                                        <input type="hidden" name="quantity" value="1">
+
+                                        <button
+                                            type="submit"
+                                            class="bg-emerald-600 hover:bg-emerald-700
+                                                text-white px-4 py-2 rounded-lg
+                                                cursor-pointer transition-colors">
+                                            Add to cart
+                                        </button>
+                                    </form>
+
 
                                 </div>
                             </div>
@@ -99,6 +105,92 @@
         @endforeach
 
     </main>
+
+@if ($cartCount > 0)
+    <section class="max-w-6xl mx-auto px-6 pb-16">
+
+        <div class="bg-white rounded-2xl shadow-md p-6">
+
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold">
+                    🛒 Your Cart ({{ $cartCount }})
+                </h2>
+                <span class="font-bold text-emerald-700">
+                    {{ number_format($cartTotal) }} VND
+                </span>
+            </div>
+
+            <div class="space-y-4">
+                @foreach ($cartItems as $item)
+                    <div class="flex flex-wrap items-center
+                                justify-between gap-4 border-b
+                                border-stone-200 pb-4">
+
+                        <div>
+                            <h3 class="font-semibold">
+                                {{ $item['product']->name }}
+                            </h3>
+                            <p class="text-sm text-stone-500">
+                                {{ $item['product']->formatted_price }}
+                            </p>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <form
+                                action="{{ route('cart.update', $item['product']) }}"
+                                method="POST"
+                                class="flex items-center gap-2">
+                                @csrf
+                                @method('PATCH')
+
+                                <input
+                                    type="number"
+                                    name="quantity"
+                                    min="1"
+                                    max="99"
+                                    value="{{ $item['quantity'] }}"
+                                    class="w-16 border border-stone-300
+                                           rounded-lg p-2 text-center">
+
+                                <button type="submit"
+                                        class="text-emerald-700
+                                               font-medium cursor-pointer">
+                                    Update
+                                </button>
+                            </form>
+
+                            <form
+                                action="{{ route('cart.remove', $item['product']) }}"
+                                method="POST">
+                                @csrf
+                                @method('DELETE')
+
+                                <button type="submit"
+                                        class="text-red-600 font-medium
+                                               cursor-pointer">
+                                    Remove
+                                </button>
+                            </form>
+                        </div>
+
+                        <span class="font-bold">
+                            {{ number_format($item['subtotal']) }} VND
+                        </span>
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <button type="button" disabled
+                        class="bg-emerald-600 text-white
+                               px-6 py-3 rounded-lg opacity-60">
+                    Checkout (coming soon)
+                </button>
+            </div>
+
+        </div>
+    </section>
+@endif
 
 </body>
 </html>
