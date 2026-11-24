@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ProductImageController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -19,3 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/products/{product}', [ProductController::class, 'update']);
     Route::delete('/products/{product}', [ProductController::class, 'destroy']);
 });
+
+Route::post('/products/{product}/image', [ProductImageController::class, 'store'])
+    ->middleware('auth:sanctum')
+    ->name('api.products.image.store');
