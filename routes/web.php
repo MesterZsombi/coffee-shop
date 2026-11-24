@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\CoffeeShopController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [CoffeeShopController::class, 'index'])
+    ->name('coffee-shop.index');
