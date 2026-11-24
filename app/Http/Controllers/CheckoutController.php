@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Log;
 
 class CheckoutController extends Controller
 {
@@ -101,6 +102,12 @@ class CheckoutController extends Controller
 
         $request->session()->forget('cart');
         $request->session()->put('last_order_id', $order->id);
+
+        Log::info('Coffee Shop order created', [
+            'order_id' => $order->id,
+            'total_amount' => $order->total_amount,
+            'currency' => $order->currency,
+        ]);
 
         return redirect()->route('checkout.success', $order)
             ->with('success', 'Your order has been placed!');
